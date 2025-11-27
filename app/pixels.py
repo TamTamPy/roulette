@@ -20,9 +20,10 @@ num_pixels = 45
 ORDER = neopixel.GRB
 
 pixels = neopixel.NeoPixel(
-    pixel_pin, num_pixels, brightness=0.2, auto_write=False, pixel_order=ORDER
+    pixel_pin, num_pixels, brightness=0.05, auto_write=False, pixel_order=ORDER
 )
 
+led_index = 0
 
 def wheel(pos):
     # Input a value 0 to 255 to get a color value.
@@ -54,27 +55,32 @@ def rainbow_cycle(wait):
         pixels.show()
         time.sleep(wait)
 
+try:
+    while True:
+        # Comment this line out if you have RGBW/GRBW NeoPixels
+       # pixels.fill((255, 0, 0))
+        # Uncomment this line if you have RGBW/GRBW NeoPixels
+        pixels.fill((255, 0, 0, 0))
+        pixels.show()
+        time.sleep(1)
 
-while True:
-    # Comment this line out if you have RGBW/GRBW NeoPixels
-   # pixels.fill((255, 0, 0))
-    # Uncomment this line if you have RGBW/GRBW NeoPixels
-    # pixels.fill((255, 0, 0, 0))
-    pixels.show()
-    time.sleep(1)
+        # Comment this line out if you have RGBW/GRBW NeoPixels
+        pixels.fill((0, 255, 0))
+        # Uncomment this line if you have RGBW/GRBW NeoPixels
+        # pixels.fill((0, 255, 0, 0))
+        pixels.show()
+        time.sleep(1)
 
-    # Comment this line out if you have RGBW/GRBW NeoPixels
-    pixels.fill((0, 255, 0))
-    # Uncomment this line if you have RGBW/GRBW NeoPixels
-    # pixels.fill((0, 255, 0, 0))
-    pixels.show()
-    time.sleep(1)
+        # Comment this line out if you have RGBW/GRBW NeoPixels
+        pixels.fill((0, 0, 255))
+        # Uncomment this line if you have RGBW/GRBW NeoPixels
+        # pixels.fill((0, 0, 255, 0))
+        pixels.show()
+        time.sleep(1)
+        while True:
+            rainbow_cycle(0.000001)  # rainbow cycle with 1ms delay per step
 
-    # Comment this line out if you have RGBW/GRBW NeoPixels
-    pixels.fill((0, 0, 255))
-    # Uncomment this line if you have RGBW/GRBW NeoPixels
-    # pixels.fill((0, 0, 255, 0))
-    pixels.show()
-    time.sleep(1)
-
-    rainbow_cycle(0.001)  # rainbow cycle with 1ms delay per step
+except KeyboardInterrupt:
+    print("\n Rainbow out. Have a nice and colorful day ")
+    pixels.brightness = 0
+    pixels.write()
