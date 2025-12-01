@@ -67,14 +67,29 @@ pair = [i for i in range(1, 37) if i % 2 == 0]
 manque = list(range(1,19))
 passe = list(range(19,37))
 
+### mehrfache Chancen ###
 
+"""
+plein = nur 35:1
+cheval = drei auf dem tableau benachbarte zahlen 17:1
+transversale pleine = drei zahlen in einer reihe 17:1
+les trois premiers = 0,1,2 11:1
+carré = 4 auf dem tableau benachbarte zahlen 8:1
+les quatre premiers = 0,1,2,3,4 8:1
+transversale simple = 6 auf dem tableau benachbarte zahlen 5:1
+douzaines = ersten 12, mittleren 12, letzten zwölf 2:1
+colonnes = einteilung in zwölfer gruppen  2:1 
 
+"""
 
+### Kesselspiele ###
+
+### Finalen ###
 
 @app.route('/')
 def display_start():
 
-    return f"Roulette! \n I thank my Co-Authors:"
+    return f"Roulette! \n I thank my Co-Authors: {co_authors[0]} , {co_authors[1]}"
 
 
 
@@ -90,7 +105,7 @@ def led_bounce():
 
     for r in range(rounds_random):
         if r%2 == 0:
-            wait += 0.0002
+            wait += 0.0009
             print (wait)
         for b in range(num_pixels):
             pixels[b] = (255, 255, 255)
@@ -127,4 +142,9 @@ def led_bounce():
 
 
 if __name__ == '__main__':
-    app.run(host='192.168.68.96')
+    try:
+        app.run(host='192.168.68.96')
+    except:
+        app.run(host='192.168.178.159')
+    finally:
+        print("No connection possible")
