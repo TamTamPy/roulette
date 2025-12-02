@@ -3,6 +3,7 @@ import board
 import neopixel
 from flask import Flask
 import random
+import sqlite3
 
 
 pixel_pin = board.D18
@@ -86,6 +87,40 @@ colonnes = einteilung in zwölfer gruppen  2:1
 
 ### Finalen ###
 
+@app.route("/player/add/<player_name>")
+def player_add(player_name):
+    with sqlite3.connect("roulette.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        tables = [row[0] for row in cur.fetchall()]
+
+        if player_name not in tables:
+            cur.execute(f"CREATE TABLE {player_name} (game_id, chance_name, amount, game_result, winnings, losses)")
+            return f"{player_name} added"
+        else:
+            return f"Player {player_name} already exists"
+
+@app.route("/")
+
+@app.route('/player/test')
+def sql_test():
+    with sqlite3.connect("roulette.db") as con:
+        cur = con.cursor()
+        cur.execute("SELECT name FROM sqlite_master")
+        tables = [row[0] for row in cur.fetchall()]
+
+        return tables
+
+@app.route('/player/drop/<player_name>')
+def player_drop_table(player_name):
+    with sqlite3.connect("roulette.db") as con:
+        cur = con.cursor()
+        try:
+            cur.execute(f"DROP TABLE {player_name}")
+            return f"{player_name} dropped"
+        except:
+            return "no such player exists in the database"
+
 @app.route('/')
 def display_start():
 
@@ -93,9 +128,12 @@ def display_start():
 
 
 
+
+
+
 @app.route('/lucky')
 def led_bounce():
-    rounds_random = random.randint(4,8)
+    rounds_random = random.randint(8,11)
     #print(rounds_random)
     number_random = random.choice(numbers_included)
     print(number_random)
@@ -147,4 +185,4 @@ if __name__ == '__main__':
     except:
         app.run(host='192.168.178.159')
     finally:
-        print("No connection possible")
+        print(" \n No connection possible or ended  ")
