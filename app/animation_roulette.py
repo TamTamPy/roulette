@@ -15,6 +15,7 @@ app = Flask(__name__)
 
 co_authors = ["AnomaLi", "Christian"]
 
+global_number_random = 0
 number_excluded = [4,8,12,17,26,31,35,39]
 numbers_included = [i for i in range(0, 45) if i not in number_excluded]
 dict_numbers_valid = {
@@ -100,14 +101,13 @@ def player_add(player_name):
         else:
             return f"Player {player_name} already exists"
 
-@app.route("/")
-
 @app.route('/player/test')
 def sql_test():
     with sqlite3.connect("roulette.db") as con:
         cur = con.cursor()
         cur.execute("SELECT name FROM sqlite_master")
-        tables = [row[0] for row in cur.fetchall()]
+        #tables = [row[0] for row in cur.fetchall()]
+        tables = cur.fetchall()
 
         return tables
 
@@ -126,8 +126,12 @@ def display_start():
 
     return f"Roulette! \n I thank my Co-Authors: {co_authors[0]} , {co_authors[1]}"
 
+@app.route('/off')
+def off():
+    pixels[global_number_random] = (0, 0, 0)
+    pixels.write()
 
-
+    return "off"
 
 
 
@@ -136,8 +140,9 @@ def led_bounce():
     rounds_random = random.randint(8,11)
     #print(rounds_random)
     number_random = random.choice(numbers_included)
-    print(number_random)
-    print(numbers_included)
+    global_number_random = number_random
+    #print(number_random)
+    #print(numbers_included)
     wait = 0.002
 
 
@@ -152,7 +157,8 @@ def led_bounce():
             pixels[b] = (0, 0, 0)
             time.sleep(wait)
             wait += 0.0001
-            #print(r)
+
+    print("reached 2nd loop")
 
     for n in range(number_random):
         print(n)
@@ -172,11 +178,12 @@ def led_bounce():
             wait += (wait + 0.000001) - wait * 0.9999
 
 
-        if dict_numbers_valid.get(number_random) in rouge:
-            return f"{dict_numbers_valid.get(number_random)} Rouge"
-        elif dict_numbers_valid.get(number_random) in noir:
-            return f"{dict_numbers_valid.get(number_random)} Noir"
 
+
+    if dict_numbers_valid.get(number_random) in rouge:
+        return f"{dict_numbers_valid.get(number_random)} Rouge"
+    elif dict_numbers_valid.get(number_random) in noir:
+        return f"{dict_numbers_valid.get(number_random)} Noire"
 
 
 if __name__ == '__main__':
